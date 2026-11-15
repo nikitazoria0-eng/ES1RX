@@ -1,130 +1,126 @@
 # 💜 ES1RX Universal
-To use, just needed Xeno or something like that. Use: 
-
-1.0.1 [Newest] = loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/refs/heads/main/ES1RX-1_0_1.lua"))()
-1.0.0 = loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/refs/heads/main/ES1RX-1_0_0.lua"))()
-###
-Or just use the newest auto updating version = loadstring(game:HttpGet("loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/refs/heads/main/ES1RX-1_0_0.lua"))()"))()
-
-(Copy this) 
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=8A2BE2&height=220&section=header&text=ES1RX&fontSize=85&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=UNIVERSAL%20ROBLOX%20CONTROL%20PANEL&descAlignY=55&descSize=17" width="100%" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=8A2BE2&height=220&section=header&text=ES1RX&fontSize=85&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=UNIVERSAL%20ROBLOX%20CHEAT%20UI" alt="ES1RX banner" />
 </p>
 
 <p align="center">
-  <b>A customizable Roblox control panel with movement, visual and player management features.</b>
+  <img src="https://img.shields.io/badge/VERSION-1.0.1-9B5FFF?style=for-the-badge&logo=github&logoColor=white" alt="Version 1.0.1" />
+  <img src="https://img.shields.io/badge/LANGUAGE-LUA-5865F2?style=for-the-badge&logo=lua&logoColor=white" alt="Lua" />
+  <img src="https://img.shields.io/badge/PLATFORM-ROBLOX-111111?style=for-the-badge&logo=roblox&logoColor=white" alt="Roblox" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/VERSION-1.0.1-9B5FFF?style=for-the-badge&logo=github&logoColor=white" />
-  <img src="https://img.shields.io/badge/LANGUAGE-LUA-5865F2?style=for-the-badge&logo=lua&logoColor=white" />
-  <img src="https://img.shields.io/badge/PLATFORM-ROBLOX-111111?style=for-the-badge&logo=roblox&logoColor=white" />
+  <b>A customizable Roblox utility UI for movement, visual enhancements, health controls, and player management.</b>
 </p>
 
 ---
 
-## ✨ About ES1RX
+## Overview
 
-**ES1RX Universal** is a Lua-based Roblox control panel designed to bring multiple gameplay and visual controls together in one interface.
+ES1RX Universal is a Lua-based Roblox UI designed to give you quick access to a wide range of gameplay and visual tools in a single, easy-to-use menu.
 
-Featuring a modern dark UI, customizable themes, interactive toggles and adjustable settings, ES1RX provides an all-in-one control experience.
+It includes:
 
-## 🚀 Features
+- Movement tweaks like speed, jump, fly, and noclip
+- Visual tools such as ESP, fullbright, crosshair, and FOV tuning
+- Health controls such as max health, god mode, and infinite health
+- Player list and team-aware features
+- Theme customization and config import/export
 
-<table>
-<tr>
-<td width="50%">
+---
 
-### 🏃 Movement
-- WalkSpeed adjustment
-- JumpPower adjustment
-- Infinite Jump
-- Fly
+## Installation
+
+Use a Roblox executor that supports `loadstring` and inject the script into a Roblox game.
+
+### Recommended version
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_1.lua"))()
+```
+
+### Older version
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_0.lua"))()
+```
+
+### Alternative auto-update style
+
+If you want to use the newest file available in the repository:
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-newest.lua"))()
+```
+
+> The script is intended to be run in a Roblox experience where you have permission to use it.
+
+---
+
+## Features
+
+### Movement
+
+- WalkSpeed control
+- JumpPower control
+- Infinite jump
+- Fly mode
 - Noclip
 
-</td>
-<td width="50%">
+### Visuals
 
-### 👁️ Visuals
-- ESP system
-- Player highlighting
-- Player names
-- Distance display
-- Team Check
+- ESP support
+- Highlighting for players
+- Display names and distance labels
+- Team check option
 - Fullbright
-- Custom Crosshair
-- Camera FOV
+- Custom crosshair
+- Camera FOV adjustments
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+### Health
 
-### ❤️ Health
-- Maximum HP adjustment
-- God Mode
-- Infinite Health
-- Automatic health restoration
-- (Some games is blocking this function and sometimes it's shows only like visuals)
-</td>
-<td width="50%">
+- Max HP adjustment
+- God mode
+- Infinite health
+- Automatic healing logic
 
-### ⚙️ Settings
-- Purple theme
-- Blue theme
-- Red theme
-- Green theme
-- Interactive controls
-- Notifications
+### Settings
 
-</td>
-</tr>
-</table>
+- Purple, blue, red, and green themes
+- FPS counter
+- Config export/import
+- Reset all settings
+- Rejoin server button
 
-## 🎨 Interface
+---
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rect&color=0D0E15&height=100&text=ES1RX%20UNIVERSAL&fontSize=30&fontColor=9B5FFF&fontAlignY=50" width="100%" />
-</p>
+## Interface
 
-The interface includes:
+The menu is built as a draggable dark UI with:
 
-- Modern dark design
-- Purple accent colors
 - Sidebar navigation
-- Multiple configuration pages
-- Customizable controls
-- Notification system
-- Draggable window
+- Multiple pages
+- Value steppers for settings
+- Toggle-based controls
+- Notifications and HUD elements
 
--->
+---
 
-## 📥 Installation
-
-1. Download or clone this repository.
-2. Open Roblox Studio.
-3. Navigate to:
-
-   `StarterPlayer > StarterPlayerScripts`
-
-4. Add a `LocalScript`.
-5. Copy the contents of `Updated.lua` into the script.
-6. Run your Roblox experience.
-
-**Recommended version:** `Updated.lua` (v1.0.1)
-
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 ES1RX/
-│
-├── ES1RX.lua       # Original version 1.0
-├── Updated.lua     # Updated version 1.0.1
-└── README.md       # Project documentation
+├── ES1RX-1_0_0.lua     # Legacy version
+├── ES1RX-1_0_1.lua     # Recommended version
+├── ES1RX-newest.lua    # Latest script file
+├── README.md           # Project documentation
+└── .gitignore          # Repo metadata
 ```
 
-## 🎨 Available Themes
+---
+
+## Themes
 
 | Theme | Accent |
 |---|---|
@@ -133,32 +129,44 @@ ES1RX/
 | ❤️ Red | Alternative |
 | 💚 Green | Alternative |
 
-## 🛠️ Built With
+---
 
-<p align="center">
-  <img src="https://skillicons.dev/icons?i=lua,roblox,github" />
-</p>
+## Usage Notes
+
+1. Open Roblox Studio or a supported Roblox game.
+2. Start a script executor.
+3. Paste one of the script URLs above.
+4. Execute the script.
+5. Press the assigned hotkey (default: Right Shift) to open the menu.
+
+---
+
+## Tech Stack
 
 - Lua
 - Roblox Luau APIs
-- Roblox UserInputService
-- Roblox RunService
-- Roblox TweenService
-- Roblox GUI System
+- UserInputService
+- RunService
+- TweenService
+- Roblox GUI system
 
-## ⚠️ Disclaimer
+---
+
+## Disclaimer
 
 ES1RX is an independent project and is not affiliated with, endorsed by, or officially connected to Roblox Corporation.
 
-Use and test the project only in experiences where you have permission to do so. Some features depend on Roblox game mechanics and client-side limitations.
+Use this project only in experiences where you have permission to do so. Some features may depend on Roblox client behavior, game mechanics, or executor limitations.
 
-## ⭐ Support
+---
 
-If you like this project, consider giving it a ⭐ on GitHub!
+## Support
+
+If you enjoy this project, consider starring the repository:
 
 <p align="center">
   <a href="https://github.com/nikitazoria0-eng/ES1RX">
-    <img src="https://img.shields.io/badge/GitHub-ES1RX-9B5FFF?style=for-the-badge&logo=github" />
+    <img src="https://img.shields.io/badge/GitHub-ES1RX-9B5FFF?style=for-the-badge&logo=github" alt="GitHub repository" />
   </a>
 </p>
 
@@ -166,6 +174,3 @@ If you like this project, consider giving it a ⭐ on GitHub!
   <b>ES1RX — Built for customization. Designed for control.</b>
 </p>
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=8A2BE2&height=100&section=footer" width="100%" />
-</p>
