@@ -1,8 +1,7 @@
-
 --====================================================
---                 ES1RX UNIVERSAL v1.0.1
+--                 ES1RX UNIVERSAL v1.0.2
 --====================================================
--- LocalScript:
+-- LocalScript
 -- StarterPlayer > StarterPlayerScripts
 --====================================================
 
@@ -27,11 +26,8 @@ local C = {
     Jump = 50,
     FlySpeed = 60,
     FOV = 70,
-    ESPDistance = 1000,
-
     MaxHealth = 100,
-    GodMode = false,
-    InfiniteHealth = false,
+    ESPDistance = 1000,
 
     SpeedEnabled = false,
     JumpEnabled = false,
@@ -44,6 +40,9 @@ local C = {
     ESPHighlight = true,
     ESPDistanceText = true,
     ESPTeamCheck = false,
+
+    GodMode = false,
+    InfiniteHealth = false,
 
     Fullbright = false,
     Crosshair = false,
@@ -60,34 +59,40 @@ local Themes = {
     Green = Color3.fromRGB(65, 210, 145)
 }
 
-local Accent = Themes.Purple
+local Accent = Themes[C.Theme]
 
 -- CHARACTER
 
-local Character, Humanoid, Root
+local Character
+local Humanoid
+local Root
 
 local function getCharacter()
     Character = Player.Character
-    Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
-    Root = Character and Character:FindFirstChild("HumanoidRootPart")
 
-    return Character and Humanoid and Root
+    if not Character then
+        return false
+    end
+
+    Humanoid = Character:FindFirstChildOfClass("Humanoid")
+    Root = Character:FindFirstChild("HumanoidRootPart")
+
+    return Humanoid ~= nil and Root ~= nil
 end
 
 -- GUI
 
 local GUI = Instance.new("ScreenGui")
-GUI.Name = "Es1rxV101"
+GUI.Name = "ES1RX_V102"
 GUI.ResetOnSpawn = false
-GUI.IgnoreGuiInset = false
 GUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 GUI.Parent = Player:WaitForChild("PlayerGui")
 
 -- NOTIFICATIONS
 
 local NotifyHolder = Instance.new("Frame")
-NotifyHolder.Size = UDim2.fromOffset(270, 300)
-NotifyHolder.Position = UDim2.new(1, -285, 0, 15)
+NotifyHolder.Size = UDim2.fromOffset(280, 300)
+NotifyHolder.Position = UDim2.new(1, -295, 0, 15)
 NotifyHolder.BackgroundTransparency = 1
 NotifyHolder.Parent = GUI
 
@@ -97,7 +102,7 @@ NotifyLayout.Parent = NotifyHolder
 
 local function notify(message)
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 0, 43)
+    frame.Size = UDim2.new(1, 0, 0, 42)
     frame.BackgroundColor3 = Color3.fromRGB(23, 23, 35)
     frame.Parent = NotifyHolder
 
@@ -108,7 +113,7 @@ local function notify(message)
     stroke.Parent = frame
 
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -15, 1, 0)
+    label.Size = UDim2.new(1, -16, 1, 0)
     label.Position = UDim2.fromOffset(10, 0)
     label.BackgroundTransparency = 1
     label.Text = "ES1RX  |  " .. tostring(message)
@@ -119,11 +124,15 @@ local function notify(message)
     label.Parent = frame
 
     task.delay(3, function()
+        if not frame.Parent then return end
+
+        TweenService:Create(frame, TweenInfo.new(0.25), {
+            BackgroundTransparency = 1
+        }):Play()
+
+        task.wait(0.3)
+
         if frame.Parent then
-            TweenService:Create(frame, TweenInfo.new(0.25), {
-                BackgroundTransparency = 1
-            }):Play()
-            task.wait(0.3)
             frame:Destroy()
         end
     end)
@@ -157,10 +166,10 @@ Top.Parent = Main
 Instance.new("UICorner", Top).CornerRadius = UDim.new(0, 12)
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -140, 1, 0)
+Title.Size = UDim2.new(1, -100, 1, 0)
 Title.Position = UDim2.fromOffset(15, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "ES1RX  /  UNIVERSAL v1.0.1"
+Title.Text = "ES1RX / UNIVERSAL v1.0.2"
 Title.TextColor3 = Accent
 Title.TextSize = 16
 Title.Font = Enum.Font.GothamBlack
@@ -192,6 +201,7 @@ local startPosition
 Top.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1
         or input.UserInputType == Enum.UserInputType.Touch then
+
         dragging = true
         dragStart = input.Position
         startPosition = Main.Position
@@ -199,10 +209,11 @@ Top.InputBegan:Connect(function(input)
 end)
 
 UIS.InputChanged:Connect(function(input)
-    if dragging and (
-        input.UserInputType == Enum.UserInputType.MouseMovement
-        or input.UserInputType == Enum.UserInputType.Touch
-    ) then
+    if not dragging then return end
+
+    if input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch then
+
         local delta = input.Position - dragStart
 
         Main.Position = UDim2.new(
@@ -217,6 +228,7 @@ end)
 UIS.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1
         or input.UserInputType == Enum.UserInputType.Touch then
+
         dragging = false
     end
 end)
@@ -233,6 +245,11 @@ Sidebar.Parent = Main
 local SideLayout = Instance.new("UIListLayout")
 SideLayout.Padding = UDim.new(0, 7)
 SideLayout.Parent = Sidebar
+
+local SidePadding = Instance.new("UIPadding")
+SidePadding.PaddingTop = UDim.new(0, 7)
+SidePadding.PaddingLeft = UDim.new(0, 6)
+SidePadding.Parent = Sidebar
 
 local Pages = Instance.new("Frame")
 Pages.Position = UDim2.fromOffset(155, 58)
@@ -259,26 +276,30 @@ local function createPage(name)
     layout.Padding = UDim.new(0, 8)
     layout.Parent = page
 
+    local padding = Instance.new("UIPadding")
+    padding.PaddingBottom = UDim.new(0, 10)
+    padding.Parent = page
+
     table.insert(PageList, page)
+
     return page
 end
 
-local function showPage(page)
-    for _, p in ipairs(PageList) do
-        p.Visible = p == page
+local function showPage(selected)
+    for _, page in ipairs(PageList) do
+        page.Visible = page == selected
     end
 end
 
-local function createTab(name, page, order)
+local function createTab(name, page)
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, -12, 0, 36)
+    button.Size = UDim2.new(1, 0, 0, 36)
     button.BackgroundColor3 = Color3.fromRGB(28, 29, 42)
     button.Text = "   " .. name
     button.TextColor3 = Color3.fromRGB(220, 220, 235)
     button.TextSize = 11
     button.Font = Enum.Font.GothamBold
     button.TextXAlignment = Enum.TextXAlignment.Left
-    button.LayoutOrder = order
     button.Parent = Sidebar
 
     Instance.new("UICorner", button).CornerRadius = UDim.new(0, 7)
@@ -288,7 +309,7 @@ local function createTab(name, page, order)
     end)
 end
 
--- CONTROL FUNCTIONS
+-- UI HELPERS
 
 local function control(parent, text)
     local button = Instance.new("TextButton")
@@ -315,20 +336,38 @@ local function section(parent, text)
     label.Font = Enum.Font.GothamBold
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = parent
+
+    return label
+end
+
+local function infoLabel(parent, text)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -8, 0, 34)
+    label.BackgroundColor3 = Color3.fromRGB(27, 28, 40)
+    label.TextColor3 = Color3.fromRGB(225, 220, 240)
+    label.Text = "  " .. text
+    label.TextSize = 11
+    label.Font = Enum.Font.GothamMedium
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = parent
+
+    Instance.new("UICorner", label).CornerRadius = UDim.new(0, 7)
+
     return label
 end
 
 local function toggle(parent, name, initial, callback)
-    local state = initial or false
+    local state = initial == true
     local button = control(parent, "")
 
     local function update(runCallback)
         button.Text = name .. (state and "  [ON]" or "  [OFF]")
+
         button.BackgroundColor3 = state
             and Color3.fromRGB(72, 49, 130)
             or Color3.fromRGB(27, 28, 40)
 
-        if runCallback then
+        if runCallback and callback then
             callback(state)
         end
     end
@@ -341,9 +380,9 @@ local function toggle(parent, name, initial, callback)
     end)
 
     return {
-        Set = function(value)
+        Set = function(value, runCallback)
             state = value == true
-            update(true)
+            update(runCallback ~= false)
         end,
 
         Get = function()
@@ -377,7 +416,7 @@ local function stepper(parent, name, initial, step, min, max, callback)
         value = math.clamp(newValue, min, max)
         label.Text = name .. ": " .. value
 
-        if runCallback ~= false then
+        if runCallback ~= false and callback then
             callback(value)
         end
     end
@@ -414,18 +453,18 @@ local PlayerPage = createPage("Player")
 local Movement = createPage("Movement")
 local Visuals = createPage("Visuals")
 local ESPPage = createPage("ESP")
-local PlayerList = createPage("PlayerList")
+local PlayerListPage = createPage("PlayerList")
 local HealthPage = createPage("Health")
 local Settings = createPage("Settings")
 
-createTab("HOME", Home, 1)
-createTab("PLAYER", PlayerPage, 2)
-createTab("MOVEMENT", Movement, 3)
-createTab("VISUALS", Visuals, 4)
-createTab("ESP SETTINGS", ESPPage, 5)
-createTab("PLAYER LIST", PlayerList, 6)
-createTab("HEALTH", HealthPage, 7)
-createTab("SETTINGS", Settings, 8)
+createTab("HOME", Home)
+createTab("PLAYER", PlayerPage)
+createTab("MOVEMENT", Movement)
+createTab("VISUALS", Visuals)
+createTab("ESP SETTINGS", ESPPage)
+createTab("PLAYER LIST", PlayerListPage)
+createTab("HEALTH", HealthPage)
+createTab("SETTINGS", Settings)
 
 showPage(Home)
 
@@ -433,37 +472,25 @@ showPage(Home)
 
 section(Home, "WELCOME TO ES1RX")
 
-local function infoLabel(parent, text)
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -8, 0, 34)
-    label.BackgroundColor3 = Color3.fromRGB(27, 28, 40)
-    label.TextColor3 = Color3.fromRGB(225, 220, 240)
-    label.Text = "  " .. text
-    label.TextSize = 11
-    label.Font = Enum.Font.GothamMedium
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.Parent = parent
-
-    Instance.new("UICorner", label).CornerRadius = UDim.new(0, 7)
-    return label
-end
-
 infoLabel(Home, "ES1RX UNIVERSAL CONTROL PANEL")
 infoLabel(Home, "USER: " .. Player.DisplayName)
 
-local PlayerCount = infoLabel(Home, "PLAYERS: " .. #Players:GetPlayers())
+local PlayerCount = infoLabel(
+    Home,
+    "PLAYERS: " .. #Players:GetPlayers()
+)
+
 infoLabel(Home, "PLACE ID: " .. game.PlaceId)
-infoLabel(Home, "VERSION: 1.0.1")
+infoLabel(Home, "VERSION: 1.0.2")
 
-Players.PlayerAdded:Connect(function()
+local function updatePlayerCount()
     PlayerCount.Text = "  PLAYERS: " .. #Players:GetPlayers()
-end)
+end
 
-Players.PlayerRemoving:Connect(function()
-    PlayerCount.Text = "  PLAYERS: " .. #Players:GetPlayers()
-end)
+Players.PlayerAdded:Connect(updatePlayerCount)
+Players.PlayerRemoving:Connect(updatePlayerCount)
 
--- PLAYER FUNCTIONS
+-- MOVEMENT
 
 local function applyMovement()
     if not getCharacter() then return end
@@ -473,29 +500,44 @@ local function applyMovement()
     Humanoid.JumpPower = C.JumpEnabled and C.Jump or 50
 end
 
-local SpeedToggle = toggle(PlayerPage, "WalkSpeed", false, function(state)
-    C.SpeedEnabled = state
-    applyMovement()
-end)
+local SpeedToggle = toggle(
+    PlayerPage,
+    "WalkSpeed",
+    false,
+    function(state)
+        C.SpeedEnabled = state
+        applyMovement()
+    end
+)
 
 stepper(PlayerPage, "Speed", 16, 2, 0, 100, function(value)
     C.Speed = value
     applyMovement()
 end)
 
-local JumpToggle = toggle(PlayerPage, "JumpPower", false, function(state)
-    C.JumpEnabled = state
-    applyMovement()
-end)
+local JumpToggle = toggle(
+    PlayerPage,
+    "JumpPower",
+    false,
+    function(state)
+        C.JumpEnabled = state
+        applyMovement()
+    end
+)
 
 stepper(PlayerPage, "Jump", 50, 5, 0, 200, function(value)
     C.Jump = value
     applyMovement()
 end)
 
-toggle(PlayerPage, "Infinite Jump", false, function(state)
-    C.InfiniteJump = state
-end)
+local InfiniteJumpToggle = toggle(
+    PlayerPage,
+    "Infinite Jump",
+    false,
+    function(state)
+        C.InfiniteJump = state
+    end
+)
 
 UIS.JumpRequest:Connect(function()
     if C.InfiniteJump and getCharacter() then
@@ -509,9 +551,24 @@ control(PlayerPage, "RESET CHARACTER").MouseButton1Click:Connect(function()
     end
 end)
 
--- HEALTH SYSTEM
+-- HEALTH
 
 section(HealthPage, "HEALTH SETTINGS")
+
+local function applyHealth()
+    if not getCharacter() then return end
+
+    Humanoid.MaxHealth = C.MaxHealth
+
+    if C.GodMode or C.InfiniteHealth then
+        Humanoid.Health = Humanoid.MaxHealth
+    else
+        Humanoid.Health = math.min(
+            Humanoid.Health,
+            Humanoid.MaxHealth
+        )
+    end
+end
 
 local HealthStepper = stepper(
     HealthPage,
@@ -522,41 +579,17 @@ local HealthStepper = stepper(
     100000,
     function(value)
         C.MaxHealth = value
-
-        if getCharacter() then
-            local oldMax = Humanoid.MaxHealth
-            local oldHealth = Humanoid.Health
-            local healthRatio = oldMax > 0 and oldHealth / oldMax or 1
-
-            Humanoid.MaxHealth = C.MaxHealth
-
-            if C.GodMode or C.InfiniteHealth then
-                Humanoid.Health = Humanoid.MaxHealth
-            else
-                Humanoid.Health = math.clamp(
-                    healthRatio * Humanoid.MaxHealth,
-                    0,
-                    Humanoid.MaxHealth
-                )
-            end
-        end
-
-        notify("Maximum HP: " .. value)
+        applyHealth()
     end
 )
 
 local GodModeToggle = toggle(
     HealthPage,
     "God Mode",
-    C.GodMode,
+    false,
     function(state)
         C.GodMode = state
-
-        if state and getCharacter() then
-            Humanoid.MaxHealth = C.MaxHealth
-            Humanoid.Health = Humanoid.MaxHealth
-        end
-
+        applyHealth()
         notify("God Mode " .. (state and "ON" or "OFF"))
     end
 )
@@ -564,24 +597,16 @@ local GodModeToggle = toggle(
 local InfiniteHealthToggle = toggle(
     HealthPage,
     "Infinite Health",
-    C.InfiniteHealth,
+    false,
     function(state)
         C.InfiniteHealth = state
-
-        if state and getCharacter() then
-            Humanoid.MaxHealth = C.MaxHealth
-            Humanoid.Health = Humanoid.MaxHealth
-        end
-
+        applyHealth()
         notify("Infinite Health " .. (state and "ON" or "OFF"))
     end
 )
 
-infoLabel(HealthPage, "Maximum HP can be adjusted from 1 to 100000.")
-infoLabel(HealthPage, "God Mode restores health after damage.")
-infoLabel(HealthPage, "Infinite Health continuously restores health.")
-
--- HEALTH MONITOR
+infoLabel(HealthPage, "Maximum HP: 1 - 100000")
+infoLabel(HealthPage, "Health restoration runs locally.")
 
 local HealthConnection
 
@@ -593,34 +618,41 @@ local function setupHealthMonitor()
 
     if not getCharacter() then return end
 
-    Humanoid.MaxHealth = C.MaxHealth
-
-    if C.GodMode or C.InfiniteHealth then
-        Humanoid.Health = Humanoid.MaxHealth
-    end
+    applyHealth()
 
     local currentHumanoid = Humanoid
 
     HealthConnection = RunService.Heartbeat:Connect(function()
         if not currentHumanoid.Parent then return end
-        if currentHumanoid.Health <= 0 then return end
 
         if C.GodMode or C.InfiniteHealth then
             if currentHumanoid.MaxHealth ~= C.MaxHealth then
                 currentHumanoid.MaxHealth = C.MaxHealth
             end
 
-            if currentHumanoid.Health < currentHumanoid.MaxHealth then
+            if currentHumanoid.Health > 0
+                and currentHumanoid.Health < currentHumanoid.MaxHealth then
+
                 currentHumanoid.Health = currentHumanoid.MaxHealth
             end
         end
     end)
 end
 
--- NOCLIP WITH COLLISION RESTORE
+-- NOCLIP
 
 local NoclipConnection
 local OriginalCollision = {}
+
+local function restoreCollision()
+    for part, original in pairs(OriginalCollision) do
+        if part and part.Parent then
+            part.CanCollide = original
+        end
+    end
+
+    table.clear(OriginalCollision)
+end
 
 local function setNoclip(state)
     C.NoclipEnabled = state
@@ -631,18 +663,12 @@ local function setNoclip(state)
     end
 
     if not state then
-        for part, original in pairs(OriginalCollision) do
-            if part and part.Parent then
-                part.CanCollide = original
-            end
-        end
-
-        table.clear(OriginalCollision)
+        restoreCollision()
         return
     end
 
-    local function disableCollision()
-        if not Character then return end
+    local function updateCollision()
+        if not getCharacter() then return end
 
         for _, part in ipairs(Character:GetDescendants()) do
             if part:IsA("BasePart") then
@@ -655,16 +681,21 @@ local function setNoclip(state)
         end
     end
 
-    disableCollision()
+    updateCollision()
 
-    NoclipConnection = RunService.Stepped:Connect(disableCollision)
+    NoclipConnection = RunService.Stepped:Connect(updateCollision)
 end
 
-local NoclipToggle = toggle(Movement, "Noclip", false, setNoclip)
+local NoclipToggle = toggle(
+    Movement,
+    "Noclip",
+    false,
+    setNoclip
+)
 
 section(Movement, "NOCLIP CONTROLS")
-infoLabel(Movement, "Toggle Noclip to pass through collidable parts.")
-infoLabel(Movement, "Turn it OFF to restore original collisions.")
+infoLabel(Movement, "Toggle Noclip to disable collisions.")
+infoLabel(Movement, "Disable it to restore original collisions.")
 
 -- FLY
 
@@ -679,7 +710,7 @@ local function setFly(state)
     end
 
     if not state then
-        if Root then
+        if getCharacter() then
             Root.AssemblyLinearVelocity = Vector3.zero
         end
         return
@@ -688,7 +719,7 @@ local function setFly(state)
     if not getCharacter() then return end
 
     FlyConnection = RunService.Heartbeat:Connect(function()
-        if not Root or not Root.Parent then return end
+        if not getCharacter() then return end
 
         local move = Vector3.zero
         local cf = Camera.CFrame
@@ -696,69 +727,96 @@ local function setFly(state)
         if UIS:IsKeyDown(Enum.KeyCode.W) then
             move += cf.LookVector
         end
+
         if UIS:IsKeyDown(Enum.KeyCode.S) then
             move -= cf.LookVector
         end
+
         if UIS:IsKeyDown(Enum.KeyCode.D) then
             move += cf.RightVector
         end
+
         if UIS:IsKeyDown(Enum.KeyCode.A) then
             move -= cf.RightVector
         end
+
         if UIS:IsKeyDown(Enum.KeyCode.Space) then
             move += Vector3.yAxis
         end
+
         if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
             move -= Vector3.yAxis
         end
 
         Root.AssemblyLinearVelocity =
-            (move.Magnitude > 0 and move.Unit or Vector3.zero) * C.FlySpeed
+            (move.Magnitude > 0 and move.Unit or Vector3.zero)
+            * C.FlySpeed
     end)
 end
 
-local FlyToggle = toggle(Movement, "Fly", false, setFly)
+local FlyToggle = toggle(
+    Movement,
+    "Fly",
+    false,
+    setFly
+)
 
 stepper(Movement, "Fly Speed", 60, 5, 5, 200, function(value)
     C.FlySpeed = value
 end)
 
--- ESP SETTINGS
+infoLabel(Movement, "WASD - movement")
+infoLabel(Movement, "SPACE - up")
+infoLabel(Movement, "LEFT CTRL - down")
+
+-- ESP
 
 local ESPObjects = {}
 
-local function clearESP()
-    for _, objects in pairs(ESPObjects) do
-        for _, obj in ipairs(objects) do
-            obj:Destroy()
+local function removeESP(target)
+    local objects = ESPObjects[target]
+
+    if not objects then return end
+
+    for _, object in ipairs(objects) do
+        if object and object.Parent then
+            object:Destroy()
         end
     end
 
-    table.clear(ESPObjects)
+    ESPObjects[target] = nil
+end
+
+local function clearESP()
+    for target in pairs(ESPObjects) do
+        removeESP(target)
+    end
 end
 
 local function sameTeam(target)
-    if not C.ESPTeamCheck then return false end
-
-    return Player.Team ~= nil and target.Team == Player.Team
+    return C.ESPTeamCheck
+        and Player.Team ~= nil
+        and target.Team == Player.Team
 end
 
 local function addESP(target)
-    if target == Player or not target.Character then return end
-    if ESPObjects[target] then return end
+    if target == Player then return end
+    if not C.ESPEnabled then return end
     if sameTeam(target) then return end
 
-    local character = target.Character
-    local head = character:FindFirstChild("Head")
-    local targetRoot = character:FindFirstChild("HumanoidRootPart")
+    removeESP(target)
 
-    if not head or not targetRoot then return end
+    local character = target.Character
+    if not character then return end
+
+    local head = character:FindFirstChild("Head")
+    if not head then return end
 
     local objects = {}
 
     if C.ESPHighlight then
         local highlight = Instance.new("Highlight")
-        highlight.Name = "Es1rxHighlight"
+        highlight.Name = "ES1RX_Highlight"
         highlight.Adornee = character
         highlight.FillColor = Accent
         highlight.OutlineColor = Color3.new(1, 1, 1)
@@ -772,7 +830,7 @@ local function addESP(target)
 
     if C.ESPNames or C.ESPDistanceText then
         local billboard = Instance.new("BillboardGui")
-        billboard.Name = "Es1rxESP"
+        billboard.Name = "ES1RX_ESP"
         billboard.Adornee = head
         billboard.Size = UDim2.fromOffset(180, 35)
         billboard.StudsOffset = Vector3.new(0, 2.5, 0)
@@ -806,8 +864,17 @@ local function refreshESP()
 end
 
 local function setupESPPlayer(target)
+    if target == Player then return end
+
     target.CharacterAdded:Connect(function()
-        task.wait(1)
+        task.wait(0.5)
+
+        if C.ESPEnabled then
+            addESP(target)
+        end
+    end)
+
+    target:GetPropertyChangedSignal("Team"):Connect(function()
         if C.ESPEnabled then
             addESP(target)
         end
@@ -815,26 +882,24 @@ local function setupESPPlayer(target)
 end
 
 for _, target in ipairs(Players:GetPlayers()) do
-    if target ~= Player then
-        setupESPPlayer(target)
-    end
+    setupESPPlayer(target)
 end
 
 Players.PlayerAdded:Connect(setupESPPlayer)
 
 Players.PlayerRemoving:Connect(function(target)
-    if ESPObjects[target] then
-        for _, obj in ipairs(ESPObjects[target]) do
-            obj:Destroy()
-        end
-        ESPObjects[target] = nil
-    end
+    removeESP(target)
 end)
 
-local ESPToggle = toggle(ESPPage, "Enable ESP", false, function(state)
-    C.ESPEnabled = state
-    refreshESP()
-end)
+local ESPToggle = toggle(
+    ESPPage,
+    "Enable ESP",
+    false,
+    function(state)
+        C.ESPEnabled = state
+        refreshESP()
+    end
+)
 
 toggle(ESPPage, "Player Names", true, function(state)
     C.ESPNames = state
@@ -860,39 +925,45 @@ stepper(ESPPage, "Max Distance", 1000, 100, 100, 5000, function(value)
     C.ESPDistance = value
 end)
 
--- ESP DISTANCE UPDATE
-
 RunService.RenderStepped:Connect(function()
     if not C.ESPEnabled then return end
 
-    local myRoot = getCharacter() and Root
-    if not myRoot then return end
+    if not getCharacter() then return end
 
     for target, objects in pairs(ESPObjects) do
-        local targetRoot = target.Character
-            and target.Character:FindFirstChild("HumanoidRootPart")
+        local targetCharacter = target.Character
+
+        local targetRoot = targetCharacter
+            and targetCharacter:FindFirstChild("HumanoidRootPart")
 
         local distance = targetRoot
-            and (myRoot.Position - targetRoot.Position).Magnitude
+            and (Root.Position - targetRoot.Position).Magnitude
             or math.huge
 
         local visible = distance <= C.ESPDistance
 
-        for _, obj in ipairs(objects) do
-            obj.Enabled = visible
+        for _, object in ipairs(objects) do
+            if object.Parent then
+                object.Enabled = visible
+            end
         end
 
         if visible then
-            for _, obj in ipairs(objects) do
-                if obj:IsA("BillboardGui") then
-                    local label = obj:FindFirstChild("Info")
+            for _, object in ipairs(objects) do
+                if object:IsA("BillboardGui") then
+                    local label = object:FindFirstChild("Info")
+
                     if label then
-                        local name = C.ESPNames and target.DisplayName or ""
+                        local name = C.ESPNames
+                            and target.DisplayName
+                            or ""
+
                         local dist = C.ESPDistanceText
                             and string.format(" [%.0fm]", distance)
                             or ""
 
                         label.Text = name .. dist
+                        label.TextColor3 = Accent
                     end
                 end
             end
@@ -908,7 +979,7 @@ local OriginalLighting = {
     GlobalShadows = Lighting.GlobalShadows
 }
 
-toggle(Visuals, "Fullbright", false, function(state)
+local function setFullbright(state)
     C.Fullbright = state
 
     if state then
@@ -920,7 +991,9 @@ toggle(Visuals, "Fullbright", false, function(state)
         Lighting.ClockTime = OriginalLighting.ClockTime
         Lighting.GlobalShadows = OriginalLighting.GlobalShadows
     end
-end)
+end
+
+toggle(Visuals, "Fullbright", false, setFullbright)
 
 stepper(Visuals, "Camera FOV", 70, 5, 30, 120, function(value)
     C.FOV = value
@@ -964,9 +1037,12 @@ end)
 RunService.RenderStepped:Connect(function()
     if C.Coordinates and getCharacter() then
         local pos = Root.Position
+
         Coordinates.Text = string.format(
             "  X: %.1f | Y: %.1f | Z: %.1f",
-            pos.X, pos.Y, pos.Z
+            pos.X,
+            pos.Y,
+            pos.Z
         )
     end
 end)
@@ -974,8 +1050,10 @@ end)
 -- PLAYER LIST
 
 local function refreshPlayerList()
-    for _, child in ipairs(PlayerList:GetChildren()) do
-        if child:IsA("TextButton") then
+    for _, child in ipairs(PlayerListPage:GetChildren()) do
+        if child:IsA("TextButton")
+            and child.Name == "PlayerEntry" then
+
             child:Destroy()
         end
     end
@@ -983,9 +1061,11 @@ local function refreshPlayerList()
     for _, target in ipairs(Players:GetPlayers()) do
         if target ~= Player then
             local button = control(
-                PlayerList,
+                PlayerListPage,
                 target.DisplayName .. "  @" .. target.Name
             )
+
+            button.Name = "PlayerEntry"
 
             button.MouseButton1Click:Connect(function()
                 local targetRoot = target.Character
@@ -994,16 +1074,19 @@ local function refreshPlayerList()
                 if targetRoot then
                     notify("Position: " .. tostring(targetRoot.Position))
                 else
-                    notify("Player character unavailable")
+                    notify("Character unavailable")
                 end
             end)
         end
     end
 end
 
-control(PlayerList, "REFRESH LIST").MouseButton1Click:Connect(refreshPlayerList)
+control(PlayerListPage, "REFRESH LIST").MouseButton1Click:Connect(
+    refreshPlayerList
+)
 
 refreshPlayerList()
+
 Players.PlayerAdded:Connect(refreshPlayerList)
 Players.PlayerRemoving:Connect(refreshPlayerList)
 
@@ -1051,8 +1134,6 @@ end)
 
 -- THEME
 
-section(Settings, "INTERFACE THEME")
-
 local function setTheme(name)
     if not Themes[name] then return end
 
@@ -1068,17 +1149,29 @@ local function setTheme(name)
         page.ScrollBarImageColor3 = Accent
     end
 
+    for _, object in ipairs(GUI:GetDescendants()) do
+        if object:IsA("Highlight") then
+            object.FillColor = Accent
+        elseif object:IsA("UIStroke") then
+            object.Color = Accent
+        end
+    end
+
     refreshESP()
     notify("Theme: " .. name)
 end
 
+section(Settings, "INTERFACE THEME")
+
 for name in pairs(Themes) do
-    control(Settings, "THEME: " .. name).MouseButton1Click:Connect(function()
-        setTheme(name)
-    end)
+    control(Settings, "THEME: " .. name).MouseButton1Click:Connect(
+        function()
+            setTheme(name)
+        end
+    )
 end
 
--- CONFIG EXPORT / IMPORT
+-- CONFIGURATION
 
 section(Settings, "CONFIGURATION")
 
@@ -1097,12 +1190,20 @@ ConfigBox.Parent = Settings
 
 Instance.new("UICorner", ConfigBox).CornerRadius = UDim.new(0, 7)
 
-control(Settings, "EXPORT CONFIG").MouseButton1Click:Connect(function()
-    ConfigBox.Text = HttpService:JSONEncode(C)
-    notify("Config exported")
-end)
+local function exportConfig()
+    local success, result = pcall(function()
+        return HttpService:JSONEncode(C)
+    end)
 
-control(Settings, "IMPORT CONFIG").MouseButton1Click:Connect(function()
+    if success then
+        ConfigBox.Text = result
+        notify("Config exported")
+    else
+        notify("Export failed")
+    end
+end
+
+local function importConfig()
     local success, data = pcall(function()
         return HttpService:JSONDecode(ConfigBox.Text)
     end)
@@ -1118,42 +1219,56 @@ control(Settings, "IMPORT CONFIG").MouseButton1Click:Connect(function()
         end
     end
 
-    C.MaxHealth = math.clamp(
-        tonumber(C.MaxHealth) or 100,
-        1,
-        100000
-    )
-
-    HealthStepper.Set(C.MaxHealth, false)
+    C.Speed = math.clamp(tonumber(C.Speed) or 16, 0, 100)
+    C.Jump = math.clamp(tonumber(C.Jump) or 50, 0, 200)
+    C.FlySpeed = math.clamp(tonumber(C.FlySpeed) or 60, 5, 200)
+    C.FOV = math.clamp(tonumber(C.FOV) or 70, 30, 120)
+    C.MaxHealth = math.clamp(tonumber(C.MaxHealth) or 100, 1, 100000)
+    C.ESPDistance = math.clamp(tonumber(C.ESPDistance) or 1000, 100, 5000)
 
     SpeedToggle.Set(C.SpeedEnabled)
     JumpToggle.Set(C.JumpEnabled)
+    InfiniteJumpToggle.Set(C.InfiniteJump)
+
     FlyToggle.Set(C.FlyEnabled)
     NoclipToggle.Set(C.NoclipEnabled)
+
     ESPToggle.Set(C.ESPEnabled)
 
     GodModeToggle.Set(C.GodMode)
     InfiniteHealthToggle.Set(C.InfiniteHealth)
 
-    applyMovement()
-    setupHealthMonitor()
-    setTheme(C.Theme)
+    HealthStepper.Set(C.MaxHealth, false)
 
-    Camera.FieldOfView = math.clamp(C.FOV, 30, 120)
+    setFullbright(C.Fullbright)
+
     Crosshair.Visible = C.Crosshair
     Coordinates.Visible = C.Coordinates
 
+    Camera.FieldOfView = C.FOV
+
+    setTheme(C.Theme)
+
+    applyMovement()
+    setupHealthMonitor()
     refreshESP()
+
     notify("Config imported")
-end)
+end
+
+control(Settings, "EXPORT CONFIG").MouseButton1Click:Connect(exportConfig)
+control(Settings, "IMPORT CONFIG").MouseButton1Click:Connect(importConfig)
 
 -- RESET
 
 control(Settings, "RESET ALL").MouseButton1Click:Connect(function()
     SpeedToggle.Set(false)
     JumpToggle.Set(false)
+    InfiniteJumpToggle.Set(false)
+
     FlyToggle.Set(false)
     NoclipToggle.Set(false)
+
     ESPToggle.Set(false)
 
     GodModeToggle.Set(false)
@@ -1164,34 +1279,45 @@ control(Settings, "RESET ALL").MouseButton1Click:Connect(function()
     C.FlySpeed = 60
     C.FOV = 70
     C.MaxHealth = 100
+    C.ESPDistance = 1000
 
-    C.InfiniteJump = false
     C.ESPNames = true
     C.ESPHighlight = true
     C.ESPDistanceText = true
     C.ESPTeamCheck = false
-    C.ESPDistance = 1000
+
     C.Fullbright = false
     C.Crosshair = false
     C.Coordinates = false
+    C.FPS = false
+
+    C.InfiniteJump = false
 
     HealthStepper.Set(100, false)
+
+    applyMovement()
 
     if getCharacter() then
         Humanoid.MaxHealth = 100
         Humanoid.Health = math.min(Humanoid.Health, 100)
     end
 
+    setFullbright(false)
+
     Camera.FieldOfView = 70
+
     Crosshair.Visible = false
     Coordinates.Visible = false
 
-    Lighting.Brightness = OriginalLighting.Brightness
-    Lighting.ClockTime = OriginalLighting.ClockTime
-    Lighting.GlobalShadows = OriginalLighting.GlobalShadows
+    if FPSConnection then
+        FPSConnection:Disconnect()
+        FPSConnection = nil
+    end
 
-    applyMovement()
+    FPSLabel.Visible = false
+
     setupHealthMonitor()
+    refreshESP()
     setTheme("Purple")
 
     notify("Settings reset")
@@ -1209,7 +1335,7 @@ control(Settings, "REJOIN SERVER").MouseButton1Click:Connect(function()
     end
 end)
 
--- MENU HOTKEY + MOBILE BUTTON
+-- MENU HOTKEY
 
 local function toggleMenu(_, inputState)
     if inputState == Enum.UserInputState.Begin then
@@ -1220,24 +1346,28 @@ local function toggleMenu(_, inputState)
 end
 
 CAS:BindAction(
-    "Es1rxToggleMenu",
+    "ES1RX_ToggleMenu",
     toggleMenu,
     true,
     Enum.KeyCode.RightShift
 )
 
-CAS:SetTitle("Es1rxToggleMenu", "ES1RX")
+CAS:SetTitle("ES1RX_ToggleMenu", "ES1RX")
+
 CAS:SetPosition(
-    "Es1rxToggleMenu",
+    "ES1RX_ToggleMenu",
     UDim2.new(1, -85, 0.65, 0)
 )
 
 -- CHARACTER RESPAWN
 
-Player.CharacterAdded:Connect(function()
+Player.CharacterAdded:Connect(function(character)
+    Character = character
+
     task.wait(0.5)
 
-    getCharacter()
+    if not getCharacter() then return end
+
     applyMovement()
     setupHealthMonitor()
 
@@ -1254,12 +1384,34 @@ Player.CharacterAdded:Connect(function()
     end
 end)
 
--- INITIAL HEALTH SETUP
+-- INITIAL SETUP
 
 task.defer(function()
     if getCharacter() then
+        applyMovement()
         setupHealthMonitor()
     end
+end)
+
+-- CLEANUP
+
+Player.CharacterRemoving:Connect(function()
+    if HealthConnection then
+        HealthConnection:Disconnect()
+        HealthConnection = nil
+    end
+
+    if FlyConnection then
+        FlyConnection:Disconnect()
+        FlyConnection = nil
+    end
+
+    if NoclipConnection then
+        NoclipConnection:Disconnect()
+        NoclipConnection = nil
+    end
+
+    restoreCollision()
 end)
 
 -- LOADING SCREEN
@@ -1285,7 +1437,7 @@ local Sub = Instance.new("TextLabel")
 Sub.Size = UDim2.fromOffset(300, 25)
 Sub.Position = UDim2.new(0.5, -150, 0.49, 0)
 Sub.BackgroundTransparency = 1
-Sub.Text = "UNIVERSAL CONTROL PANEL v1.0.1"
+Sub.Text = "UNIVERSAL CONTROL PANEL v1.0.2"
 Sub.TextColor3 = Color3.fromRGB(150, 150, 170)
 Sub.TextSize = 11
 Sub.Font = Enum.Font.GothamMedium
@@ -1344,6 +1496,7 @@ task.spawn(function()
     end
 
     task.wait(0.3)
+
     Main.Visible = true
 
     local fade = TweenService:Create(
@@ -1358,11 +1511,32 @@ task.spawn(function()
         {TextTransparency = 1}
     ):Play()
 
+    TweenService:Create(
+        Sub,
+        TweenInfo.new(0.4),
+        {TextTransparency = 1}
+    ):Play()
+
+    TweenService:Create(
+        BarBG,
+        TweenInfo.new(0.4),
+        {BackgroundTransparency = 1}
+    ):Play()
+
+    TweenService:Create(
+        Bar,
+        TweenInfo.new(0.4),
+        {BackgroundTransparency = 1}
+    ):Play()
+
+    LoadText.TextTransparency = 1
+
     fade:Play()
     fade.Completed:Wait()
 
     Loading:Destroy()
-    notify("ES1RX v1.0.1 loaded!")
+
+    notify("ES1RX v1.0.2 loaded!")
 end)
 
-print("[ES1RX] Universal v1.0.1 initialized")
+print("[ES1RX] Universal v1.0.2 initialized")
