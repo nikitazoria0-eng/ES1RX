@@ -37,10 +37,10 @@ Use a Roblox executor that supports `loadstring` and inject the script into a Ro
 ### Newest version
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_1.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_2.lua"))()
 ```
 
-### Older version
+### Oldest version
 
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_0.lua"))()
