@@ -4,7 +4,8 @@ To use, just needed Xeno or something like that. Use:
 1.0.1 [Newest] = loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/refs/heads/main/ES1RX-1_0_1.lua"))()
 1.0.0 = loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/refs/heads/main/ES1RX-1_0_0.lua"))()
 ###
-Or just use the newest auto updating version = 
+Or just use the newest auto updating version = loadstring(game:HttpGet("loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/refs/heads/main/ES1RX-1_0_0.lua"))()"))()
+
 (Copy this) 
 
 <p align="center">
