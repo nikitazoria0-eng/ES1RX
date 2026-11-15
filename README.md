@@ -34,7 +34,7 @@ It includes:
 
 Use a Roblox executor that supports `loadstring` and inject the script into a Roblox game.
 
-### Recommended version
+### Newest version
 
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_1.lua"))()
@@ -46,7 +46,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1R
 loadstring(game:HttpGet("https://raw.githubusercontent.com/nikitazoria0-eng/ES1RX/main/ES1RX-1_0_0.lua"))()
 ```
 
-### Alternative auto-update style
+### Recommended version
 
 If you want to use the newest file available in the repository:
 
