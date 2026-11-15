@@ -1,6 +1,6 @@
 
 --====================================================
---                 ES1RX UNIVERSAL v3.0
+--                 ES1RX UNIVERSAL v1.0
 --====================================================
 -- LocalScript:
 -- StarterPlayer > StarterPlayerScripts
