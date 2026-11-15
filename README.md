@@ -32,6 +32,8 @@ It includes:
 
 ## Installation
 
+
+Install Xeno: www.xeno.now
 Use a Roblox executor that supports `loadstring` and inject the script into a Roblox game.
 
 ### Newest version
