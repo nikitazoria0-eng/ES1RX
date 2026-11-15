@@ -58,7 +58,7 @@ Featuring a modern dark UI, customizable themes, interactive toggles and adjusta
 - God Mode
 - Infinite Health
 - Automatic health restoration
-
+- (Some games is blocking this function and sometimes it's shows only like visuals)
 </td>
 <td width="50%">
 
@@ -89,24 +89,6 @@ The interface includes:
 - Customizable controls
 - Notification system
 - Draggable window
-
-## 🖼️ Screenshots
-
-<p align="center">
-  <i>Screenshots coming soon!</i>
-</p>
-
-<!-- Add your real screenshots here:
-
-<p align="center">
-  <img src="assets/home.png" width="48%" />
-  <img src="assets/movement.png" width="48%" />
-</p>
-
-<p align="center">
-  <img src="assets/visuals.png" width="48%" />
-  <img src="assets/settings.png" width="48%" />
-</p>
 
 -->
 
